@@ -15,18 +15,24 @@ public class Invoice {
 	}
 
 	public void addProduct(Product product) {
-		// TODO: implement
+		products.put(product, 1);
 	}
 
 	public void addProduct(Product product, Integer quantity) {
-		// TODO: implement
+		products.put(product, quantity);
 	}
+	
+	public void addProduct(Product product, BigDecimal quantity) {
+		products.put(product, quantity.intValue());
+	}
+	
+	
 
 	public BigDecimal getSubtotal() {
 		
 		BigDecimal subtotal = BigDecimal.ZERO;
 		for (Product p: products.keySet()) {
-			subtotal = subtotal.add(p.getPrice().multiply(BigDecimal.valueOf(products.get(p))));
+			subtotal = subtotal.add(p.getPrice());
 		}
 		return subtotal;
 	}
