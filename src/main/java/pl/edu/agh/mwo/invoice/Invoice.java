@@ -19,7 +19,11 @@ public class Invoice {
 	}
 
 	public void addProduct(Product product, Integer quantity) {
-		products.put(product, quantity);
+		if (quantity <= 0) {
+			throw new IllegalArgumentException("Quantity must be positive");
+		} else {
+			products.put(product, quantity);
+		}
 	}	
 
 	public BigDecimal getNetPrice() {
