@@ -14,6 +14,8 @@ public abstract class Product {
 			throw new IllegalArgumentException("Name, price or tax is null");
 		} else if (name.length() == 0) {
 			throw new IllegalArgumentException("Empty name");
+		} else if (tax.signum() == -1 || price.signum() == -1) {
+			throw new IllegalArgumentException("Price or tax negative");
 		} else {
 			this.name = name;
 			this.price = price;
@@ -34,7 +36,6 @@ public abstract class Product {
 	}
 
 	public BigDecimal getPriceWithTax() {
-
 		return price.add(price.multiply(taxPercent));
 	}
 }
