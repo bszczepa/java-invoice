@@ -12,6 +12,8 @@ public abstract class Product {
 	protected Product(String name, BigDecimal price, BigDecimal tax) {
 		if (name == null || price == null || tax == null) {
 			throw new IllegalArgumentException("Name, price or tax is null");
+		} else if (name.length() == 0) {
+			throw new IllegalArgumentException("Empty name");
 		} else {
 			this.name = name;
 			this.price = price;
