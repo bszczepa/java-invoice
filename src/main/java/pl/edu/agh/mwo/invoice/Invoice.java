@@ -20,19 +20,14 @@ public class Invoice {
 
 	public void addProduct(Product product, Integer quantity) {
 		products.put(product, quantity);
-	}
-	
-	public void addProduct(Product product, BigDecimal quantity) {
-		products.put(product, quantity.intValue());
-	}
-	
-	
+	}	
 
-	public BigDecimal getSubtotal() {
-		
+	public BigDecimal getNetPrice() {
+			
 		BigDecimal subtotal = BigDecimal.ZERO;
+		
 		for (Product p: products.keySet()) {
-			subtotal = subtotal.add(p.getPrice());
+			subtotal = subtotal.add(p.getPrice().multiply(BigDecimal.valueOf(products.get(p))));
 		}
 		return subtotal;
 	}
