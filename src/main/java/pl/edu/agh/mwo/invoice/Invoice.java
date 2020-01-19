@@ -26,16 +26,29 @@ public class Invoice {
 		
 		BigDecimal subtotal = BigDecimal.ZERO;
 		for (Product p: products.keySet()) {
-			subtotal = subtotal.add(p.getPrice());
+			subtotal = subtotal.add(p.getPrice().multiply(BigDecimal.valueOf(products.get(p))));
 		}
 		return subtotal;
 	}
 
 	public BigDecimal getTax() {
-		return null;
+		
+		BigDecimal totalTaxAmount = BigDecimal.ZERO;
+		BigDecimal taxAmount = BigDecimal.ZERO;
+		
+		for (Product p: products.keySet()) {
+			taxAmount = p.getPrice().multiply(p.getTaxPercent());
+			totalTaxAmount = totalTaxAmount.add(taxAmount.multiply(BigDecimal.valueOf(products.get(p))));
+		}
+		return totalTaxAmount;
 	}
 
 	public BigDecimal getTotal() {
-		return null;
+		
+		BigDecimal total = BigDecimal.ZERO;
+		for (Product p: products.keySet()) {
+			total = total.add(p.getPriceWithTax().multiply(BigDecimal.valueOf(products.get(p))));
+		}
+		return total;
 	}
 }
