@@ -104,4 +104,54 @@ public class InvoiceTest {
     public void testInvoiceWithNegativeQuantity() {
         invoice.addProduct(new DairyProduct("Zsiadle mleko", new BigDecimal("5.55")), -1);
     }
+
+    @Test
+    public void testInvoiceIdIsPositive() {
+        Assert.assertTrue("Id is not positive", invoice.getInvoiceId() > 0);
+    }
+
+    @Test
+    public void testPrintedProductListIsNotEmpty() {
+        Assert.assertTrue("Product list cannot be of less or equal to 0 length. " , invoice.toString().length() > 0 );
+    }
+
+    @Test
+    public void testPrintedProductListHasInvoiceIdOnTop() {
+        Assert.assertTrue(  Integer.parseInt(invoice.productsToString().split("\n")[0]) == invoice.getInvoiceId());
+    }
+
+    @Test
+    public void testPrintedProductListReturnsNoProducts() {
+        Assert.assertTrue(invoice.productsToString().equals(invoice.getInvoiceId() + "\n" + invoice.getProducts().size()));
+    }
+
+    @Test
+    public void testPrintedProductListReturnsOneProduct() {
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        String result = invoice.getInvoiceId() + "\n" +
+                        "Produkt 1: Owoce, Ilość: 1, Cena: 200" + "\n" +
+                        invoice.getProducts().size();
+        Assert.assertTrue(invoice.productsToString().equals(result));
+    }
+
+    @Test
+    public void testPrintedProductListReturnsTwoProducts() {
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
+        String result = invoice.getInvoiceId() + "\n" +
+                "Produkt 1: Owoce, Ilość: 1, Cena: 200" + "\n" +
+                "Produkt 2: Chleb, Ilość: 2, Cena: 5" + "\n" +
+                invoice.getProducts().size();
+        Assert.assertTrue(invoice.productsToString().equals(result));
+    }
+
+    @Test
+    public void testPrintedProductCountHasProperProductCount() {
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
+        Assert.assertTrue(  Integer.parseInt(invoice.productsToString().split("\n")
+                [invoice.productsToString().split("\n").length -1]) == 2);
+
+    }
+
 }
