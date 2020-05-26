@@ -2,6 +2,7 @@ package pl.edu.agh.mwo.invoice;
 
 import java.math.BigDecimal;
 
+import org.hamcrest.CoreMatchers;
 import org.hamcrest.Matchers;
 import org.junit.Assert;
 import org.junit.Before;
@@ -122,7 +123,7 @@ public class InvoiceTest {
 
     @Test
     public void testPrintedProductListReturnsNoProducts() {
-        Assert.assertTrue(invoice.productsToString().equals(invoice.getInvoiceId() + "\n" + invoice.getProducts().size()));
+        Assert.assertTrue(invoice.productsToString().equals(invoice.getInvoiceId() + "\n" + "Liczba pozycji: " + invoice.getProducts().size()));
     }
 
     @Test
@@ -130,7 +131,7 @@ public class InvoiceTest {
         invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
         String result = invoice.getInvoiceId() + "\n" +
                         "Produkt 1: Owoce, Ilość: 1, Cena: 200" + "\n" +
-                        invoice.getProducts().size();
+                        "Liczba pozycji: " + invoice.getProducts().size();
         Assert.assertTrue(invoice.productsToString().equals(result));
     }
 
@@ -138,20 +139,28 @@ public class InvoiceTest {
     public void testPrintedProductListReturnsTwoProducts() {
         invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
         invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
-        String result = invoice.getInvoiceId() + "\n" +
-                "Produkt 1: Owoce, Ilość: 1, Cena: 200" + "\n" +
-                "Produkt 2: Chleb, Ilość: 2, Cena: 5" + "\n" +
-                invoice.getProducts().size();
-        Assert.assertTrue(invoice.productsToString().equals(result));
+
+        String result = invoice.productsToString();
+
+        Assert.assertThat(result, CoreMatchers.containsString("Owoce, Ilość: 1, Cena: 200" + "\n"));
+        Assert.assertThat(result, CoreMatchers.containsString("Chleb, Ilość: 2, Cena: 5" + "\n"));
     }
 
     @Test
-    public void testPrintedProductCountHasProperProductCount() {
+    public void testPrintedProductListHasProperProductCount() {
         invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
         invoice.addProduct(new TaxFreeProduct("Chleb", new BigDecimal("5")), 2);
-        Assert.assertTrue(  Integer.parseInt(invoice.productsToString().split("\n")
-                [invoice.productsToString().split("\n").length -1]) == 2);
+        String print = invoice.productsToString();
+        int productCount = Integer.parseInt(print.substring(print.lastIndexOf("Liczba pozycji: ") + 16));
+        Assert.assertTrue(productCount == 2);
 
+    }
+
+    @Test
+    public void testDuplicatedProductsAddAsQuantity() {
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        invoice.addProduct(new TaxFreeProduct("Owoce", new BigDecimal("200")));
+        Assert.assertTrue( invoice.getProducts().size() == 1);
     }
 
 }

@@ -23,7 +23,6 @@ public class Invoice {
         return products;
     }
 
-
     public void addProduct(Product product) {
         addProduct(product, 1);
     }
@@ -32,7 +31,13 @@ public class Invoice {
         if (product == null || quantity <= 0) {
             throw new IllegalArgumentException();
         }
-        products.put(product, quantity);
+
+        if (products.containsKey(product)) {
+            quantity = products.get(product) + quantity;
+            products.replace(product, quantity);
+        } else {
+            products.put(product, quantity);
+        }
     }
 
     public String productsToString() {
@@ -47,7 +52,7 @@ public class Invoice {
                                                     products.get(p),
                                                     p.getPrice().toString());
         }
-        result = result + products.size();
+        result = result + "Liczba pozycji: " + products.size();
         return result;
     }
 
